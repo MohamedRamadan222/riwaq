@@ -1,13 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:riwaq/core/constants/app_colors.dart';
+import 'package:riwaq/core/constants/app_styles.dart';
+import 'package:riwaq/core/utils/widgets/custom_elevated_button.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../widgets/book_card.dart';
-import '../widgets/category_chips.dart';
-import '../widgets/home_search_field.dart';
-import '../widgets/home_top_appbar.dart';
-import '../widgets/promo_banner_card.dart';
-
+import '../../../auth/presentation/widgets/custom_text_field.dart';
+import '../widgets/cateory_ships.dart';
+import '../widgets/custom_text_field_home.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,105 +17,184 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _selectedCategory = 'الكل';
-
-  final List<String> _categories = ['الكل', 'روايات', 'تطوير ذات', 'تاريخ', 'علوم'];
-
-
-  final List<BookModel> _books = [
-    BookModel(
-      title: 'الداء والدواء',
-      author: 'لابن القيم',
-      imagePath: 'assets/images/book1.jpg',
-      location: 'القاهرة',
-      rating: 4.8,
-      badgeType: BookBadgeType.exchange,
-    ),
-    BookModel(
-      title: 'كن بخير',
-      author: 'عائشة العمران',
-      imagePath: 'assets/images/book2.jpg',
-      location: 'الدقهلية',
-      rating: 4.5,
-      badgeType: BookBadgeType.rent,
-    ),
-  ];
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
+      appBar: AppBar(
+        toolbarHeight: 50,
+        leading: Icon(CupertinoIcons.bell),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'الموقع الحالى',
+                  style: TextStyle(color: Colors.grey, fontSize: 9),
+                ),
+                Gap(5),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.arrow_back_ios_rounded, size: 19),
+                    Gap(5),
+                    Text(
+                      'تحديد الموقع',
+                      style: AppStyles.bold13.copyWith(fontSize: 11),
+                    ),
+                    Gap(5),
+                    Icon(Icons.location_on_outlined, size: 19),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          children: [
-            const HomeTopBar(),
-            const Gap(20),
-            const HomeSearchField(),
-            const Gap(20),
-
-            // بانر: كتب قريبة منك
-            PromoBannerCard(
-              title: 'كتب قريبة منك؟',
-              subtitle: 'فعّل الموقع لرؤية الكتب القريبين منك',
-              buttonText: 'تفعيل',
-              filledButton: true,
-              backgroundColor: AppColors.primary.withValues(alpha: 0.12),
-              onPressed: () {
-                // todo: طلب صلاحية الموقع
-              },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                Gap(20),
+                CustomTextFieldHome(
+                  controller: _searchController,
+                  hintText: 'ابحث عن كتاب او مؤلف',
+                ),
+                Gap(20),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  height: 85,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomElevatedButton(
+                        onPressed: () {},
+                        title: 'تفعيل',
+                        width: 80,
+                        radius: 8,
+                        fontSize: 12,
+                        height: 42,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text('كتب قريبة منك؟', style: AppStyles.bold13),
+                          Gap(3),
+                          Text(
+                            'فعل الموقع لرؤية الوراقون\n القريبون منك',
+                            textDirection: TextDirection.rtl,
+                            style: AppStyles.bold13.copyWith(
+                              fontSize: 10,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(20),
+                Container(
+                  height: 180,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Positioned(
+                        top: -30,
+                        left: -30,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(64),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: -60,
+                        right: -40,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(64),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 40,
+                        top: 25,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'لديك كتب لا تقرأها؟',
+                              style: AppStyles.bold13.copyWith(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Gap(3),
+                            Text(
+                              'قد يكون كتاب على رفك نافذة\n معرفة لشخص اخر',
+                              textDirection: TextDirection.rtl,
+                              style: AppStyles.bold13.copyWith(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Gap(15),
+                            CustomElevatedButton(
+                              onPressed: () {},
+                              title: 'أضف كتابك الان',
+                              width: 130,
+                              radius: 8,
+                              fontSize: 12,
+                              height: 45,
+                              fontColor: AppColors.primary,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Gap(20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'عرض الكل',
+                      style: AppStyles.bold13.copyWith(
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    Text('تصفح بالاقسام', style: AppStyles.bold13),
+                  ],
+                ),
+                Gap(20),
+                CategorySelector(),
+              ],
             ),
-            const Gap(16),
-
-            // بانر: أضف كتابك
-            PromoBannerCard(
-              title: 'لديك كتب لا تقرأها؟',
-              subtitle: 'قد يكون كتابك على رفك نافذة معرفة لشخص آخر',
-              buttonText: 'أضف كتابك الآن',
-              filledButton: true,
-              backgroundColor: AppColors.primary,
-              onPressed: () {
-                // todo: انتقل لشاشة إضافة كتاب
-              },
-            ),
-            const Gap(24),
-
-            // الأقسام
-            CategoryChipsRow(
-              categories: _categories,
-              selected: _selectedCategory,
-              onSelected: (value) => setState(() => _selectedCategory = value),
-              onViewAll: () {
-                // todo: انتقل لشاشة كل الأقسام
-              },
-            ),
-            const Gap(20),
-
-            // شبكة الكتب
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _books.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
-                childAspectRatio: 0.55,
-              ),
-              itemBuilder: (context, index) {
-                final book = _books[index];
-                return BookCard(
-                  book: book,
-                  onTap: () {
-                    // todo: انتقل لتفاصيل الكتاب
-                  },
-                  onFavoriteTap: () {
-                    // todo: toggle favorite
-                  },
-                );
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

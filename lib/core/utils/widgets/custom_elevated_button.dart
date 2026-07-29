@@ -10,6 +10,9 @@ class CustomElevatedButton extends StatelessWidget {
   final double? radius;
   final VoidCallback? onPressed;
   final Widget? icon;
+  final double? fontSize;
+  final Color? color;
+  final Color? fontColor;
 
   const CustomElevatedButton({
     super.key,
@@ -19,22 +22,28 @@ class CustomElevatedButton extends StatelessWidget {
     this.radius,
     this.onPressed,
     this.icon,
+    this.fontSize,
+    this.color,
+    this.fontColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final label = Text(
       title,
-      style: AppStyles.bold13.copyWith(color: Colors.white, fontSize: 18),
+      style: AppStyles.bold13.copyWith(
+        color: fontColor ?? Colors.white,
+        fontSize: fontSize ?? 18,
+      ),
     );
     final style = ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primary,
+      backgroundColor: color ?? AppColors.primary,
       foregroundColor: Colors.white,
       minimumSize: Size(width ?? double.infinity, height ?? 54),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius ?? 16),
       ),
-      elevation: 3,
+      // elevation: 3,
     );
 
     if (icon != null) {

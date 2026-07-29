@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
       title: 'Riwaq',
       theme: ThemeData(
         textTheme: GoogleFonts.cairoTextTheme(),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+        )
       ),
       home: MainScreen(),
     );
