@@ -22,7 +22,7 @@ class _CategorySelectorState extends State<CategorySelector> {
     {'title': 'علوم'},
     {'title': 'تنمية ذاتية'},
     {'title': 'دين'},
-    {'title': 'فلسفة'},
+    {'title': 'أدب'},
     {'title': 'شعر'},
     {'title': 'أطفال'},
   ];
@@ -39,7 +39,6 @@ class _CategorySelectorState extends State<CategorySelector> {
           itemBuilder: (context, index) {
             final category = categories[index];
             final String itemName = category['title'];
-            final IconData icon = category['icon'];
             final bool isSelected = selectedIndex == index;
             return Padding(
               padding: const EdgeInsetsDirectional.only(end: 8),
