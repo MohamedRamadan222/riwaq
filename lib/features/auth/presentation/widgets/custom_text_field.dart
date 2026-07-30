@@ -5,11 +5,13 @@ import '../../../../core/constants/app_colors.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final TextInputType? keyboardType;
 
   const CustomTextField({
     super.key,
     required this.controller,
     required this.hintText,
+    this.keyboardType,
   });
 
   @override
@@ -24,6 +26,7 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         textAlign: TextAlign.right,
+        keyboardType: keyboardType ?? TextInputType.text,
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
