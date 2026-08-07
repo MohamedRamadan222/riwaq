@@ -8,13 +8,14 @@ import '../../../../core/error/exceptions.dart';
 abstract class AuthLocalDataSource {
   Future<void> cacheUser(UserModel user);
 
-  Future<UserModel> getCacheUser();
+  Future<UserModel> getCachedUser();
 
   Future<void> clearUser();
+
+  bool hasCachedUser();
 }
 
 const String userBoxName = 'userBox';
-
 const String cachedUserKey = 'CACHED_USER';
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -28,16 +29,19 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<UserModel> getCacheUser() async {
+  Future<UserModel> getCachedUser() async {
     final jsonString = box.get(cachedUserKey);
     if (jsonString == null) {
       throw CacheException('لا يوجد بيانات مستخدم مخزنة');
     }
-    return UserModel.formJson(jsonDecode(jsonString));
+    return UserModel.fromJson(jsonDecode(jsonString));
   }
 
   @override
   Future<void> clearUser() async {
     await box.delete(cachedUserKey);
   }
+
+  @override
+  bool hasCachedUser() => box.containsKey(cachedUserKey);
 }

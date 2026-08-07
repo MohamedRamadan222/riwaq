@@ -21,7 +21,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'https://dummyjson.com/auth/login',
         data: {'username': username, 'password': password},
       );
-      return UserModel.formJson(response.data);
+      return UserModel.fromJson(response.data);
     } on DioException catch (e) {
       final errMsg = e.response?.data['message'] ?? "حدث خطأ فى السيرفير";
       throw ServerException(errMsg);

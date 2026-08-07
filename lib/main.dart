@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:riwaq/features/onboarding/presentation/pages/on_boarding_screen.dart';
+import 'package:riwaq/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:riwaq/features/onboarding/presentation/pages/splash_screen.dart';
 import 'core/di/injection_container.dart' as di;
 import 'package:hive_flutter/adapters.dart';
@@ -13,11 +13,14 @@ void main() async {
 
   await di.initInjection();
 
-  runApp(const MyApp());
+  final bool isLoggedIn = di.sl<AuthLocalDataSource>().hasCachedUser();
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.cairoTextTheme(),
         appBarTheme: AppBarTheme(backgroundColor: Colors.white),
       ),
-      home: SplashScreen(),
+      home: isLoggedIn ? const MainScreen() : const SplashScreen(),
     );
   }
 }

@@ -11,7 +11,7 @@ class UserModel extends UserEntity {
     required super.token,
   });
 
-  factory UserModel.formJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'],
       username: json['username'],
