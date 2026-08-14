@@ -1,14 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:riwaq/features/home/presentation/widgets/custom_book_card.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_styles.dart';
-import '../../../details/presentation/pages/book_details_screen.dart';
+import '../../domain/entities/product_entity.dart';
+import '../widgets/custom_book_card.dart';
 
 class CustomGridView extends StatefulWidget {
-  const CustomGridView({super.key});
+  final List<ProductEntity> products;
+
+  const CustomGridView({super.key, required this.products});
 
   @override
   State<CustomGridView> createState() => _CustomGridViewState();
@@ -26,9 +24,9 @@ class _CustomGridViewState extends State<CustomGridView> {
         crossAxisSpacing: 18,
         childAspectRatio: 0.60,
       ),
-      itemCount: 10,
+      itemCount: widget.products.length,
       itemBuilder: (context, index) {
-        return CustomBookCard();
+        return CustomBookCard(product: widget.products[index]);
       },
     );
   }

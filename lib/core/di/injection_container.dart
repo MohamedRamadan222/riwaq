@@ -7,6 +7,11 @@ import 'package:riwaq/features/auth/data/repositories/auth_repository_impl.dart'
 import 'package:riwaq/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riwaq/features/auth/domain/usecases/login_usecase.dart';
 import 'package:riwaq/features/auth/presentation/cubit/login_cubit.dart';
+import 'package:riwaq/features/home/data/datasources/product_remote_data_source.dart';
+import 'package:riwaq/features/home/data/repositories/product_repository_impl.dart';
+import 'package:riwaq/features/home/domain/repositories/product_repository.dart';
+import 'package:riwaq/features/home/domain/usecases/get_products_usecase.dart';
+import 'package:riwaq/features/home/presentation/cubit/home_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -33,4 +38,18 @@ Future<void> initInjection() async {
   );
 
   sl.registerFactory<LoginCubit>(() => LoginCubit(sl()));
+
+  sl.registerLazySingleton<ProductRemoteDataSource>(
+    () => ProductRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerLazySingleton<ProductRepository>(
+    () => ProductRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  sl.registerLazySingleton<GetProductsUsecase>(
+    () => GetProductsUsecase(sl()),
+  );
+
+  sl.registerFactory<HomeCubit>(() => HomeCubit(sl()));
 }

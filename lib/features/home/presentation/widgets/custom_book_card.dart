@@ -5,9 +5,24 @@ import 'package:gap/gap.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_styles.dart';
 import '../../../details/presentation/pages/book_details_screen.dart';
+import '../../domain/entities/product_entity.dart';
 
 class CustomBookCard extends StatefulWidget {
-  const CustomBookCard({super.key});
+  final ProductEntity product;
+
+  const CustomBookCard({super.key, this.product = const ProductEntity(
+    id: 0,
+    title: 'كتاب التوحيد',
+    description: '',
+    category: '',
+    price: 0,
+    discountPercentage: 0,
+    rating: 0,
+    stock: 0,
+    brand: 'محمد رمضان',
+    thumbnail: '',
+    images: [],
+  )});
 
   @override
   State<CustomBookCard> createState() => _CustomBookCardState();
@@ -51,10 +66,15 @@ class _CustomBookCardState extends State<CustomBookCard> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        'assets/images/book5.jpg',
+                      child: Image.network(
+                        widget.product.thumbnail,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset(
+                          'assets/images/book5.jpg',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Positioned(
@@ -87,7 +107,7 @@ class _CustomBookCardState extends State<CustomBookCard> {
                 children: [
                   Expanded(
                     child: Text(
-                      'كتاب التوحيد',
+                      widget.product.title,
                       overflow: TextOverflow.ellipsis,
                       style: AppStyles.bold13.copyWith(fontSize: 11),
                     ),
@@ -97,7 +117,7 @@ class _CustomBookCardState extends State<CustomBookCard> {
               ),
               const Gap(4),
               Text(
-                'محمد رمضان',
+                widget.product.brand,
                 style: AppStyles.bold13.copyWith(
                   fontSize: 8,
                   color: Colors.grey,

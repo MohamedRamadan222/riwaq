@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:riwaq/core/constants/app_colors.dart';
 import 'package:riwaq/core/constants/app_styles.dart';
+import 'package:riwaq/core/di/injection_container.dart';
+import 'package:riwaq/features/home/presentation/cubit/home_cubit.dart';
+import 'package:riwaq/features/home/presentation/cubit/home_state.dart';
 import '../widgets/category_ships.dart';
 import '../widgets/custom_card_home.dart';
 import '../widgets/custom_grid_view.dart';
@@ -18,10 +22,26 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+  late final HomeCubit _cubit = sl<HomeCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit.getProducts();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _cubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider.value(
+      value: _cubit,
+      child: Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.grey[100],
@@ -59,7 +79,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: SafeArea(
+      body: BlocConsumer<HomeCubit, HomeState>(
+        listener: (context, state) {
+          if (state is HomeError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is HomeLoading;
+
+          return SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -90,11 +121,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 Gap(20),
                 CategorySelector(),
                 Gap(20),
-                CustomGridView(),
+                if (isLoading)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: CircularProgressIndicator(),
+                  )
+                else if (state is HomeSuccess)
+                  CustomGridView(products: state.products),
               ],
             ),
           ),
         ),
+      );
+        },
+      ),
       ),
     );
   }
