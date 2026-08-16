@@ -13,9 +13,15 @@ class ProductRepositoryImpl implements ProductRepository {
   });
 
   @override
-  Future<Either<Failure, List<ProductEntity>>> getProducts() async {
+  Future<Either<Failure, List<ProductEntity>>> getProducts({
+    required int limit,
+    required int skip,
+  }) async {
     try {
-      final products = await remoteDataSource.getProducts();
+      final products = await remoteDataSource.getProducts(
+        limit: limit,
+        skip: skip,
+      );
       return Right(products);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.errMsg));

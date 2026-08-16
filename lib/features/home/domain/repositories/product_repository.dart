@@ -3,5 +3,8 @@ import 'package:riwaq/core/error/failures.dart';
 import 'package:riwaq/features/home/domain/entities/product_entity.dart';
 
 abstract class ProductRepository {
-  Future<Either<Failure, List<ProductEntity>>> getProducts();
+  Future<Either<Failure, List<ProductEntity>>> getProducts({
+    required int limit,
+    required int skip,
+  });
 }

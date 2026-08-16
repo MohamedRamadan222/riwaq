@@ -3,7 +3,7 @@ import 'package:riwaq/core/error/exceptions.dart';
 import 'package:riwaq/features/home/data/models/product_model.dart';
 
 abstract class ProductRemoteDataSource {
-  Future<List<ProductModel>> getProducts();
+  Future<List<ProductModel>> getProducts({required int limit, required int skip});
 }
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
@@ -12,9 +12,15 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   ProductRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<ProductModel>> getProducts() async {
+  Future<List<ProductModel>> getProducts({
+    required int limit,
+    required int skip,
+  }) async {
     try {
-      final response = await dio.get('https://dummyjson.com/products');
+      final response = await dio.get(
+        'https://dummyjson.com/products',
+        queryParameters: {'limit': limit, 'skip': skip},
+      );
       final List products = response.data['products'];
       return products
           .map((product) => ProductModel.fromJson(product))

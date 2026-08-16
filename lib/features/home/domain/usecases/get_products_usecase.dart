@@ -9,6 +9,9 @@ class GetProductsUsecase {
 
   GetProductsUsecase(this.repository);
 
-  Future<Either<Failure, List<ProductEntity>>> call() =>
-      repository.getProducts();
+  Future<Either<Failure, List<ProductEntity>>> call({
+    required int limit,
+    required int skip,
+  }) =>
+      repository.getProducts(limit: limit, skip: skip);
 }

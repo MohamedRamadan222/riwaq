@@ -15,11 +15,17 @@ class HomeLoading extends HomeState {}
 
 class HomeSuccess extends HomeState {
   final List<ProductEntity> products;
+  final bool hasMore;
+  final bool isLoadingMore;
 
-  const HomeSuccess(this.products);
+  const HomeSuccess(
+    this.products, {
+    this.hasMore = true,
+    this.isLoadingMore = false,
+  });
 
   @override
-  List<Object?> get props => [products];
+  List<Object?> get props => [products, hasMore, isLoadingMore];
 }
 
 class HomeError extends HomeState {

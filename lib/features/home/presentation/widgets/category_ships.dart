@@ -5,8 +5,9 @@ import '../../../../core/constants/app_styles.dart';
 
 class CategorySelector extends StatefulWidget {
   final Function(String?)? onCategorySelected;
+  final List<String>? categories;
 
-  const CategorySelector({super.key, this.onCategorySelected});
+  const CategorySelector({super.key, this.onCategorySelected, this.categories});
 
   @override
   State<CategorySelector> createState() => _CategorySelectorState();
@@ -15,17 +16,18 @@ class CategorySelector extends StatefulWidget {
 class _CategorySelectorState extends State<CategorySelector> {
   int selectedIndex = 0;
 
-  final List<Map<String, dynamic>> categories = const [
-    {'title': 'الكل'},
-    {'title': 'روايات'},
-    {'title': 'تاريخ'},
-    {'title': 'علوم'},
-    {'title': 'تنمية ذاتية'},
-    {'title': 'دين'},
-    {'title': 'أدب'},
-    {'title': 'شعر'},
-    {'title': 'أطفال'},
-  ];
+  List<String> get categories => widget.categories ??
+      const [
+        'الكل',
+        'روايات',
+        'تاريخ',
+        'علوم',
+        'تنمية ذاتية',
+        'دين',
+        'أدب',
+        'شعر',
+        'أطفال',
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +39,7 @@ class _CategorySelectorState extends State<CategorySelector> {
           scrollDirection: Axis.horizontal,
           itemCount: categories.length,
           itemBuilder: (context, index) {
-            final category = categories[index];
-            final String itemName = category['title'];
+            final String itemName = categories[index];
             final bool isSelected = selectedIndex == index;
             return Padding(
               padding: const EdgeInsetsDirectional.only(end: 8),
