@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:riwaq/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:riwaq/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:riwaq/features/onboarding/presentation/pages/splash_screen.dart';
 import 'core/di/injection_container.dart' as di;
 import 'package:hive_flutter/adapters.dart';
@@ -24,14 +26,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Riwaq',
-      theme: ThemeData(
-        textTheme: GoogleFonts.cairoTextTheme(),
-        appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+    return BlocProvider<FavoritesCubit>(
+      create: (_) => di.sl<FavoritesCubit>()..loadFavorites(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Riwaq',
+        theme: ThemeData(
+          textTheme: GoogleFonts.cairoTextTheme(),
+          appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+        ),
+        home: isLoggedIn ? const MainScreen() : const SplashScreen(),
       ),
-      home: isLoggedIn ? const MainScreen() : const SplashScreen(),
     );
   }
 }

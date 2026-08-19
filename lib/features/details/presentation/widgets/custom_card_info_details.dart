@@ -3,9 +3,12 @@ import 'package:gap/gap.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_styles.dart';
+import '../../../home/domain/entities/product_entity.dart';
 
 class CustomCardInfoDetails extends StatelessWidget {
-  const CustomCardInfoDetails({super.key});
+  final ProductEntity product;
+
+  const CustomCardInfoDetails({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +30,10 @@ class CustomCardInfoDetails extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('احمد محمد', style: AppStyles.bold13),
+                Text(product.brand, style: AppStyles.bold13),
                 const Gap(8),
                 Text(
-                  'محب للقراءة و مهتم بتبادل المعرفة مع الاخرين يشارك كتبه ليستفيد الجميع',
+                  product.description,
                   textAlign: TextAlign.end,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -46,11 +49,19 @@ class CustomCardInfoDetails extends StatelessWidget {
           const Gap(12),
           ClipRRect(
             borderRadius: BorderRadius.circular(64),
-            child: Image.asset(
-              'assets/images/book5.jpg',
+            child: Image.network(
+              product.thumbnail.isEmpty
+                  ? 'assets/images/book5.jpg'
+                  : product.thumbnail,
               width: 60,
               height: 60,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Image.asset(
+                'assets/images/book5.jpg',
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],

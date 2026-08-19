@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:riwaq/core/constants/app_colors.dart';
 import 'package:riwaq/core/constants/app_styles.dart';
+import 'package:riwaq/core/di/injection_container.dart';
+import 'package:riwaq/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:riwaq/features/auth/presentation/widgets/custom_text_field.dart';
-import 'package:riwaq/features/home/presentation/pages/main_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,13 +15,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController _nameController = TextEditingController(
-    text: 'محمد حسن',
-  );
-  final TextEditingController _phoneController = TextEditingController(
-    text: '+201100010001',
-  );
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
+  String? _avatarUrl;
   String? _selectedGender = 'ذكر';
   DateTime? _selectedDate = DateTime(2004, 10, 1);
 
@@ -32,8 +31,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    try {
+      final user = await sl<AuthLocalDataSource>().getCachedUser();
+      if (!mounted) return;
+      setState(() {
+        _nameController.text = '${user.firstName} ${user.lastName}'.trim();
+        _emailController.text = user.email;
+        _avatarUrl = user.image.isEmpty ? null : user.image;
+      });
+    } catch (_) {}
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
+    _emailController.dispose();
     _phoneController.dispose();
     super.dispose();
   }
@@ -61,20 +79,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         scrolledUnderElevation: 0,
         toolbarHeight: 50,
         automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => MainScreen()),
-                );
-              },
-              child: const Icon(CupertinoIcons.arrow_right),
-            ),
-          ),
-        ],
         title: const Text('حسابى'),
         centerTitle: true,
       ),
@@ -89,12 +93,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(64),
-                    child: Image.asset(
-                      'assets/images/book5.jpg',
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.cover,
-                    ),
+                    child: _avatarUrl == null
+                        ? Image.asset(
+                            'assets/images/book5.jpg',
+                            width: 90,
+                            height: 90,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(
+                            _avatarUrl!,
+                            width: 90,
+                            height: 90,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Image.asset(
+                              'assets/images/book5.jpg',
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                   ),
                   Positioned(
                     right: 2,
@@ -164,6 +182,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: AppStyles.bold13.copyWith(
                 color: AppColors.black.withValues(alpha: 0.8),
               ),
+            ),
+            const Gap(20),
+
+            _buildLabel('البريد الالكتروني'),
+            const Gap(10),
+            CustomTextField(
+              controller: _emailController,
+              hintText: 'البريد الالكتروني',
+              keyboardType: TextInputType.emailAddress,
             ),
             const Gap(20),
 

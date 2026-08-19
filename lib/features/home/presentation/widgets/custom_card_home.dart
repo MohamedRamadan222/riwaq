@@ -6,7 +6,9 @@ import '../../../../core/constants/app_styles.dart';
 import '../../../../core/utils/widgets/custom_elevated_button.dart';
 
 class CustomCardHome extends StatelessWidget {
-  const CustomCardHome({super.key});
+  final VoidCallback? onAddPressed;
+
+  const CustomCardHome({super.key, this.onAddPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class CustomCardHome extends StatelessWidget {
                 ),
                 Gap(15),
                 CustomElevatedButton(
-                  onPressed: () {},
+                  onPressed: onAddPressed,
                   title: 'أضف كتابك الان',
                   width: 130,
                   radius: 8,

@@ -15,7 +15,9 @@ import '../widgets/custom_promo_card.dart';
 import '../widgets/custom_text_field_home.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onAddBookPressed;
+
+  const HomeScreen({super.key, this.onAddBookPressed});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -26,12 +28,18 @@ class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
   late final HomeCubit _cubit = sl<HomeCubit>();
   String? _selectedCategory;
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _cubit.getProducts();
     _scrollController.addListener(_onScroll);
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() => _searchQuery = _searchController.text.trim());
   }
 
   void _onScroll() {
@@ -45,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _searchController.dispose();
     _scrollController.dispose();
-    _cubit.close();
     super.dispose();
   }
 
@@ -56,10 +63,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<ProductEntity> _filteredProducts(List<ProductEntity> products) {
-    if (_selectedCategory == null || _selectedCategory == 'الكل') {
-      return products;
+    List<ProductEntity> result = products;
+
+    if (_searchQuery.isNotEmpty) {
+      result = result
+          .where(
+            (p) =>
+                p.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+                p.brand.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
+          .toList();
     }
-    return products.where((p) => p.category == _selectedCategory).toList();
+
+    if (_selectedCategory != null && _selectedCategory != 'الكل') {
+      result = result.where((p) => p.category == _selectedCategory).toList();
+    }
+
+    return result;
   }
 
   @override
@@ -107,9 +127,14 @@ class _HomeScreenState extends State<HomeScreen> {
         body: BlocConsumer<HomeCubit, HomeState>(
           listener: (context, state) {
             if (state is HomeError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+              );
             }
           },
           builder: (context, state) {
@@ -128,9 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         hintText: 'ابحث عن كتاب او مؤلف',
                       ),
                       Gap(20),
-                      CustomPromoCard(),
+                      CustomPromoCard(onActivatePressed: widget.onAddBookPressed),
                       Gap(20),
-                      CustomCardHome(),
+                      CustomCardHome(onAddPressed: widget.onAddBookPressed),
                       Gap(20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,18 +183,52 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: CircularProgressIndicator(),
                         )
                       else if (state is HomeSuccess)
-                        Column(
-                          children: [
-                            CustomGridView(
-                              products: _filteredProducts(state.products),
-                            ),
-                            if (state.isLoadingMore)
-                              const Padding(
-                                padding: EdgeInsets.only(top: 16, bottom: 16),
-                                child: CircularProgressIndicator(),
-                              ),
-                          ],
+                        Builder(
+                          builder: (context) {
+                            final filtered = _filteredProducts(state.products);
+                            if (filtered.isEmpty) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 60),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.search,
+                                      size: 60,
+                                      color: Colors.grey.withValues(alpha: 0.4),
+                                    ),
+                                    const Gap(16),
+                                    Text(
+                                      'لا توجد نتائج مطابقة',
+                                      style: AppStyles.bold13,
+                                    ),
+                                    const Gap(6),
+                                    Text(
+                                      'جرّب كلمة بحث اخرى',
+                                      style: AppStyles.bold13.copyWith(
+                                        fontSize: 11,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return Column(
+                              children: [
+                                CustomGridView(
+                                  products: filtered,
+                                  allProducts: state.products,
+                                ),
+                                if (state.isLoadingMore)
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 16, bottom: 16),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                              ],
+                            );
+                          },
                         ),
+                      const Gap(24),
                     ],
                   ),
                 ),

@@ -6,7 +6,9 @@ import '../../../../core/constants/app_styles.dart';
 import '../../../../core/utils/widgets/custom_elevated_button.dart';
 
 class CustomPromoCard extends StatelessWidget {
-  const CustomPromoCard({super.key});
+  final VoidCallback? onActivatePressed;
+
+  const CustomPromoCard({super.key, this.onActivatePressed});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +21,10 @@ class CustomPromoCard extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomElevatedButton(
-            onPressed: () {},
+            onPressed: onActivatePressed,
             title: 'تفعيل',
             width: 80,
             radius: 8,
@@ -30,15 +33,18 @@ class CustomPromoCard extends StatelessWidget {
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text('كتب قريبة منك؟', style: AppStyles.bold13),
               Gap(3),
               Text(
                 'فعل الموقع لرؤية الوراقون\n القريبون منك',
                 textDirection: TextDirection.rtl,
+                textAlign: TextAlign.end,
                 style: AppStyles.bold13.copyWith(
                   fontSize: 10,
                   color: Colors.grey[700],
+                  height: 1.3,
                 ),
               ),
             ],

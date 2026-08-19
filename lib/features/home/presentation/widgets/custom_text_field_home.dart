@@ -17,18 +17,19 @@ class CustomTextFieldHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.fieldBorder, width: 1),
       ),
       child: TextFormField(
         controller: controller,
         textAlign: TextAlign.right,
         style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 3,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
         ),
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -36,6 +37,7 @@ class CustomTextFieldHome extends StatelessWidget {
           hintTextDirection: TextDirection.rtl,
           hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 12),
           suffixIcon: Icon(CupertinoIcons.search, color: Colors.grey),
+          contentPadding: const EdgeInsets.symmetric(vertical: 15),
         ),
       ),
     );

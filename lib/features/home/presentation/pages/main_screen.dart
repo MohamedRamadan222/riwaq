@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:riwaq/core/constants/app_colors.dart';
+import 'package:riwaq/core/constants/app_styles.dart';
+import 'package:riwaq/features/favorites/presentation/pages/favorites_screen.dart';
 import 'package:riwaq/features/profile/presentation/pages/profile_screen.dart';
 
-import '../../../../core/constants/app_colors.dart';
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,12 +17,22 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int currentIndex = 4;
-  static const List<Widget> screens = [
-    ProfileScreen(),
-    Scaffold(backgroundColor: Colors.white60),
-    Scaffold(backgroundColor: Colors.blue),
-    Scaffold(backgroundColor: Colors.green),
-    HomeScreen(),
+  late final List<Widget> screens = [
+    const ProfileScreen(),
+    const _PlaceholderScreen(
+      icon: CupertinoIcons.chat_bubble_2,
+      title: 'الرسائل',
+      message: 'سيتم تفعيل المحادثات قريبا',
+    ),
+    const _PlaceholderScreen(
+      icon: CupertinoIcons.add,
+      title: 'إضافة كتاب',
+      message: 'سيتم تفعيل اضافة الكتب قريبا',
+    ),
+    const FavoritesScreen(),
+    HomeScreen(
+      onAddBookPressed: () => setState(() => currentIndex = 2),
+    ),
   ];
 
   @override
@@ -71,7 +84,7 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.heart),
             activeIcon: Icon(CupertinoIcons.heart_fill),
-            label: "التصنيفات",
+            label: "المفضلة",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
@@ -79,6 +92,48 @@ class _MainScreenState extends State<MainScreen> {
             label: "الرئيسية",
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PlaceholderScreen extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String message;
+
+  const _PlaceholderScreen({
+    required this.icon,
+    required this.title,
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.grey[100],
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        toolbarHeight: 50,
+        title: Text(title),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 60,
+              color: AppColors.primary.withValues(alpha: 0.4),
+            ),
+            const Gap(16),
+            Text(message, style: AppStyles.bold13),
+          ],
+        ),
       ),
     );
   }

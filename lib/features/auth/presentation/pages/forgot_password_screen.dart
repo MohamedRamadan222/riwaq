@@ -18,95 +18,129 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _controller = TextEditingController();
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Gap(10),
-            Center(
-              child: Text(
-                'نسيت كلمة المرور',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ),
-            Gap(25),
-            Text('البريد الإلكتروني', style: AppStyles.bold13),
-            const Gap(8),
-            CustomTextField(
-              controller: _controller,
-              hintText: 'expmramadan42@gmail.com',
-            ),
-            Gap(300),
-            CustomElevatedButton(title: 'ارسال', onPressed: () {}),
-            Gap(25),
-            Center(
-              child: Text(
-                'او قم بتسجيل الدخول عبر',
-                style: AppStyles.bold13.copyWith(
-                  fontSize: 11,
-                  color: Colors.grey[600],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Gap(10),
+              Center(
+                child: Text(
+                  'نسيت كلمة المرور',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
-            ),
-            Gap(35),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 70),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _SocialIconButton(
-                    icon: FontAwesomeIcons.google,
-                    color: Colors.red.withAlpha(200),
-                    onTap: () {},
-                  ),
-                  _SocialIconButton(
-                    icon: FontAwesomeIcons.facebookF,
-                    color: const Color(0xFF1877F2),
-                    onTap: () {},
-                  ),
-                  _SocialIconButton(
-                    icon: FontAwesomeIcons.apple,
-                    color: Colors.black,
-                    onTap: () {},
-                  ),
-                ],
+              Gap(25),
+              Text('البريد الإلكتروني', style: AppStyles.bold13),
+              const Gap(8),
+              CustomTextField(
+                controller: _controller,
+                hintText: 'expmramadan42@gmail.com',
+                keyboardType: TextInputType.emailAddress,
               ),
-            ),
-
-            Gap(20),
-
-            Padding(
-              padding: const EdgeInsets.only(bottom: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'ليس لديك حساب؟',
-                    style: AppStyles.bold13.copyWith(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const Gap(4),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      'إنشاء حساب',
-                      style: AppStyles.bold13.copyWith(
-                        fontSize: 13,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
+              const Spacer(),
+              CustomElevatedButton(
+                title: 'ارسال',
+                onPressed: () {
+                  if (_controller.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'من فضلك ادخل البريد الالكتروني',
+                          textDirection: TextDirection.rtl,
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'تم ارسال رابط استعادة كلمة المرور الى بريدك',
+                        textDirection: TextDirection.rtl,
                       ),
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            ),
-          ],
+              Gap(25),
+              Center(
+                child: Text(
+                  'او قم بتسجيل الدخول عبر',
+                  style: AppStyles.bold13.copyWith(
+                    fontSize: 11,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              Gap(35),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 70),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _SocialIconButton(
+                      icon: FontAwesomeIcons.google,
+                      color: Colors.red.withAlpha(200),
+                      onTap: () {},
+                    ),
+                    _SocialIconButton(
+                      icon: FontAwesomeIcons.facebookF,
+                      color: const Color(0xFF1877F2),
+                      onTap: () {},
+                    ),
+                    _SocialIconButton(
+                      icon: FontAwesomeIcons.apple,
+                      color: Colors.black,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+
+              Gap(20),
+
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ليس لديك حساب؟',
+                      style: AppStyles.bold13.copyWith(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const Gap(4),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'إنشاء حساب',
+                        style: AppStyles.bold13.copyWith(
+                          fontSize: 13,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

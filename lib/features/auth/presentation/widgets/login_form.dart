@@ -3,9 +3,9 @@ import 'package:gap/gap.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_styles.dart';
+import '../pages/forgot_password_screen.dart';
 
-
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   final TextEditingController usernameController;
   final TextEditingController passwordController;
 
@@ -16,6 +16,13 @@ class LoginForm extends StatelessWidget {
   });
 
   @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  bool _obscurePassword = true;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -23,7 +30,7 @@ class LoginForm extends StatelessWidget {
         Text('البريد الإلكتروني', style: AppStyles.bold13),
         const Gap(8),
         _buildTextField(
-          controller: usernameController,
+          controller: widget.usernameController,
           hintText: 'sara@example.com',
           isPassword: false,
         ),
@@ -31,14 +38,22 @@ class LoginForm extends StatelessWidget {
         Text('كلمة المرور', style: AppStyles.bold13),
         const Gap(8),
         _buildTextField(
-          controller: passwordController,
+          controller: widget.passwordController,
           hintText: 'كلمة المرور',
           isPassword: true,
         ),
         const Gap(8),
-        Text(
-          'نسيت كلمة المرور؟',
-          style: AppStyles.bold13.copyWith(color: AppColors.primary),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+            );
+          },
+          child: Text(
+            'نسيت كلمة المرور؟',
+            style: AppStyles.bold13.copyWith(color: AppColors.primary),
+          ),
         ),
       ],
     );
@@ -59,7 +74,7 @@ class LoginForm extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         textAlign: TextAlign.right,
-        obscureText: isPassword,
+        obscureText: isPassword && _obscurePassword,
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -71,10 +86,16 @@ class LoginForm extends StatelessWidget {
           hintTextDirection: TextDirection.rtl,
           hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 14),
           suffixIcon: isPassword
-              ? const Icon(
-            Icons.remove_red_eye_outlined,
-            color: AppColors.textHint,
-          )
+              ? IconButton(
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.remove_red_eye_outlined
+                        : Icons.remove_red_eye,
+                    color: AppColors.textHint,
+                  ),
+                  onPressed: () =>
+                      setState(() => _obscurePassword = !_obscurePassword),
+                )
               : null,
         ),
       ),

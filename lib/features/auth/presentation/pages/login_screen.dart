@@ -31,18 +31,28 @@ class _LoginScreenState extends State<LoginScreen> {
         body: BlocConsumer<LoginCubit, LoginState>(
           listener: (context, state) {
             if (state is LoginError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+              );
             }
             if (state is LoginSuccess) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => MainScreen()),
               );
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('تم تسجيل الدخول بنجاح!')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'تم تسجيل الدخول بنجاح!',
+                    textDirection: TextDirection.rtl,
+                  ),
+                ),
+              );
             }
           },
           builder: (context, state) {

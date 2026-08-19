@@ -5,8 +5,13 @@ import '../widgets/custom_book_card.dart';
 
 class CustomGridView extends StatefulWidget {
   final List<ProductEntity> products;
+  final List<ProductEntity> allProducts;
 
-  const CustomGridView({super.key, required this.products});
+  const CustomGridView({
+    super.key,
+    required this.products,
+    this.allProducts = const [],
+  });
 
   @override
   State<CustomGridView> createState() => _CustomGridViewState();
@@ -26,7 +31,11 @@ class _CustomGridViewState extends State<CustomGridView> {
       ),
       itemCount: widget.products.length,
       itemBuilder: (context, index) {
-        return CustomBookCard(product: widget.products[index]);
+        return CustomBookCard(
+          product: widget.products[index],
+          similarProducts:
+              widget.allProducts.isNotEmpty ? widget.allProducts : widget.products,
+        );
       },
     );
   }

@@ -32,11 +32,12 @@ class _CategorySelectorState extends State<CategorySelector> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: 44,
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
           itemCount: categories.length,
           itemBuilder: (context, index) {
             final String itemName = categories[index];
@@ -60,20 +61,18 @@ class _CategorySelectorState extends State<CategorySelector> {
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.primary : AppColors.white,
                     borderRadius: BorderRadius.circular(32),
-                    border: Border.all(color: AppColors.fieldBorder, width: 1),
+                    border: Border.all(
+                      color: AppColors.fieldBorder,
+                      width: 1,
+                    ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        itemName,
-                        style: AppStyles.bold13.copyWith(
-                          color: isSelected
-                              ? AppColors.white
-                              : AppColors.textUnselected,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    itemName,
+                    style: AppStyles.bold13.copyWith(
+                      color: isSelected
+                          ? AppColors.white
+                          : AppColors.textUnselected,
+                    ),
                   ),
                 ),
               ),

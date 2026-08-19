@@ -7,6 +7,9 @@ import 'package:riwaq/features/auth/data/repositories/auth_repository_impl.dart'
 import 'package:riwaq/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riwaq/features/auth/domain/usecases/login_usecase.dart';
 import 'package:riwaq/features/auth/presentation/cubit/login_cubit.dart';
+import 'package:riwaq/features/favorites/data/datasources/favorites_local_data_source.dart';
+import 'package:riwaq/features/favorites/data/repositories/favorites_repository.dart';
+import 'package:riwaq/features/favorites/presentation/cubit/favorites_cubit.dart';
 import 'package:riwaq/features/home/data/datasources/product_remote_data_source.dart';
 import 'package:riwaq/features/home/data/repositories/product_repository_impl.dart';
 import 'package:riwaq/features/home/domain/repositories/product_repository.dart';
@@ -20,6 +23,9 @@ Future<void> initInjection() async {
 
   final userBox = await Hive.openBox(userBoxName);
   sl.registerLazySingleton<Box>(() => userBox);
+
+  final favoritesBox = await Hive.openBox(favoritesBoxName);
+  sl.registerLazySingleton<Box>(() => favoritesBox, instanceName: favoritesBoxName);
 
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(sl()),
@@ -38,6 +44,16 @@ Future<void> initInjection() async {
   );
 
   sl.registerFactory<LoginCubit>(() => LoginCubit(sl()));
+
+  sl.registerLazySingleton<FavoritesLocalDataSource>(
+    () => FavoritesLocalDataSourceImpl(sl<Box>(instanceName: favoritesBoxName)),
+  );
+
+  sl.registerLazySingleton<FavoritesRepository>(
+    () => FavoritesRepository(sl()),
+  );
+
+  sl.registerLazySingleton<FavoritesCubit>(() => FavoritesCubit(sl()));
 
   sl.registerLazySingleton<ProductRemoteDataSource>(
     () => ProductRemoteDataSourceImpl(sl()),

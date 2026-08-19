@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_styles.dart';
+import '../../../favorites/presentation/widgets/favorite_button.dart';
+import '../../../home/domain/entities/product_entity.dart';
 
 class CustomDetailsBookCard extends StatelessWidget {
-  const CustomDetailsBookCard({super.key});
+  final ProductEntity product;
+
+  const CustomDetailsBookCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +37,19 @@ class CustomDetailsBookCard extends StatelessWidget {
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      'assets/images/book5.jpg',
+                    child: Image.network(
+                      product.thumbnail.isEmpty
+                          ? 'assets/images/book5.jpg'
+                          : product.thumbnail,
                       width: 170,
                       height: 260,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Image.asset(
+                        'assets/images/book5.jpg',
+                        width: 170,
+                        height: 260,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -80,15 +93,48 @@ class CustomDetailsBookCard extends StatelessWidget {
                       ],
                     ),
                     child: Center(
-                      child: Icon(
-                        CupertinoIcons.heart,
-                        size: 20,
-                        color: AppColors.primary,
+                      child: FavoriteButton(
+                        product: product,
+                        iconSize: 18,
+                        activeColor: AppColors.primary,
                       ),
                     ),
                   ),
                 ),
               ],
+            ),
+            const Gap(8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${product.price} ج.م',
+                    style: AppStyles.bold13.copyWith(
+                      color: AppColors.primary,
+                      fontSize: 13,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        CupertinoIcons.star_fill,
+                        size: 14,
+                        color: AppColors.primary,
+                      ),
+                      const Gap(4),
+                      Text(
+                        product.rating.toStringAsFixed(1),
+                        style: AppStyles.bold13.copyWith(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
